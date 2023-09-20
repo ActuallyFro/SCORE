@@ -18,7 +18,7 @@
 
     th {
       background-color: #f2f2f2;
-      font-weight: bold; /* Added for bold column headers */
+      font-weight: bold;
     }
 
     /* Form Styles */
@@ -76,6 +76,7 @@
 
   <table id="log">
     <tr>
+      <th>Time</th>
       <th>Saves</th>
       <th>Goals Against</th>
       <th>Clean Sheets</th>
@@ -100,15 +101,17 @@
       const savesInput = document.getElementById('savesInput').valueAsNumber;
       const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
       const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
-      logEntry({ saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput });
+      logEntry({ time: new Date().toLocaleTimeString(), saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput });
       updateStats();
     });
 
     function logEntry(entryData) {
       const row = logTable.insertRow();
-      const savesCell = row.insertCell(0);
-      const goalsAgainstCell = row.insertCell(1);
-      const cleanSheetsCell = row.insertCell(2);
+      const timeCell = row.insertCell(0);
+      const savesCell = row.insertCell(1);
+      const goalsAgainstCell = row.insertCell(2);
+      const cleanSheetsCell = row.insertCell(3);
+      timeCell.textContent = entryData.time;
       savesCell.textContent = entryData.saves;
       goalsAgainstCell.textContent = entryData.goalsAgainst;
       cleanSheetsCell.textContent = entryData.cleanSheets;
@@ -138,9 +141,10 @@
         if (index !== 0) {
           const cells = row.querySelectorAll('td');
           const entry = {
-            saves: parseInt(cells[0].textContent),
-            goalsAgainst: parseInt(cells[1].textContent),
-            cleanSheets: parseInt(cells[2].textContent),
+            time: cells[0].textContent,
+            saves: parseInt(cells[1].textContent),
+            goalsAgainst: parseInt(cells[2].textContent),
+            cleanSheets: parseInt(cells[3].textContent),
           };
           logEntries.push(entry);
         }
