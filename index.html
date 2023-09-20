@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Goalie Tracker</title>
+
+  <style>
+    /* Table Styles */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold; /* Added for bold column headers */
+    }
+
+    /* Form Styles */
+    #logForm {
+      margin-bottom: 20px;
+    }
+
+    #logForm input[type="number"] {
+      width: 100px;
+      padding: 5px;
+      margin-right: 10px;
+    }
+
+    #logForm button {
+      padding: 5px 10px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Buttons */
+    button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <h1>Goalie Tracker</h1>
+
+  <table id="stats">
+  </table>
+
+  <h2>Log New Entry</h2>
+
+  <form id="logForm">
+    <!-- Form Fields -->
+    <input type="number" id="savesInput" placeholder="Saves">
+    <input type="number" id="goalsAgainstInput" placeholder="Goals Against">
+    <input type="number" id="cleanSheetsInput" placeholder="Clean Sheets">
+    <button type="submit">Log Entry</button>
+  </form>
+
+  <hr> <!-- Added <hr> to divide the parts -->
+
+  <h2>Log Entries</h2>
+
+  <table id="log">
+    <tr>
+      <th>Saves</th>
+      <th>Goals Against</th>
+      <th>Clean Sheets</th>
+    </tr>
+  </table>
+
+  <button onclick="exportJSON()">Export JSON</button>
+  <button onclick="importJSON()">Import JSON</button>
+  <button onclick="clearLog()">Clear Log</button>
+
+  <script>
+    let saves = 0;
+    let goalsAgainst = 0;
+    let cleanSheets = 0;
+
+    const form = document.getElementById('logForm');
+    const logTable = document.getElementById('log');
+    const statsTable = document.getElementById('stats');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const savesInput = document.getElementById('savesInput').valueAsNumber;
+      const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
+      const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
+      logEntry({ saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput });
+      updateStats();
+    });
+
+    function logEntry(entryData) {
+      const row = logTable.insertRow();
+      const savesCell = row.insertCell(0);
+      const goalsAgainstCell = row.insertCell(1);
+      const cleanSheetsCell = row.insertCell(2);
+      savesCell.textContent = entryData.saves;
+      goalsAgainstCell.textContent = entryData.goalsAgainst;
+      cleanSheetsCell.textContent = entryData.cleanSheets;
+    }
+
+    function updateStats() {
+      statsTable.innerHTML = `
+        <tr>
+          <td>Saves:</td>
+          <td>${saves}</td>
+        </tr>
+        <tr>
+          <td>Goals Against:</td>
+          <td>${goalsAgainst}</td>
+        </tr>
+        <tr>
+          <td>Clean Sheets:</td>
+          <td>${cleanSheets}</td>
+        </tr>
+      `;
+    }
+
+    function exportJSON() {
+      const logEntries = [];
+      const rows = logTable.querySelectorAll('tr');
+      rows.forEach((row, index) => {
+        if (index !== 0) {
+          const cells = row.querySelectorAll('td');
+          const entry = {
+            saves: parseInt(cells[0].textContent),
+            goalsAgainst: parseInt(cells[1].textContent),
+            cleanSheets: parseInt(cells[2].textContent),
+          };
+          logEntries.push(entry);
+        }
+      });
+      const jsonBlob = new Blob([JSON.stringify(logEntries)], { type: 'application/json' });
+      const url = URL.createObjectURL(jsonBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'goalie_log.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJSON() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const importedData = JSON.parse(event.target.result);
+          importedData.forEach((entry) => {
+            logEntry(entry);
+          });
+          updateStats();
+        };
+        reader.readAsText(file);
+      });
+      input.click();
+    }
+
+    function clearLog() {
+      logTable.innerHTML = ''; 
+      saves = 0;
+      goalsAgainst = 0;
+      cleanSheets = 0;
+      updateStats();
+    }
+
+  </script>
+
+</body>
+</html>
