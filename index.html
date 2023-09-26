@@ -9,29 +9,41 @@
       border-collapse: collapse;
       width: 100%;
     }
-
+  
     th, td {
       border: 1px solid #ddd;
       padding: 8px;
       text-align: left;
     }
-
+  
     th {
       background-color: #f2f2f2;
       font-weight: bold;
     }
-
+  
     /* Form Styles */
     #logForm {
       margin-bottom: 20px;
     }
-
+  
     #logForm input[type="number"] {
       width: 100px;
       padding: 5px;
       margin-right: 10px;
     }
-
+  
+    #logForm input[type="text"] {
+      width: 200px;
+      padding: 5px;
+      margin-right: 10px;
+    }
+  
+    #logForm select {
+      width: 100px;
+      padding: 5px;
+      margin-right: 10px;
+    }
+  
     #logForm button {
       padding: 5px 10px;
       background-color: #007BFF;
@@ -39,7 +51,7 @@
       border: none;
       cursor: pointer;
     }
-
+  
     /* Buttons */
     button {
       margin-right: 10px;
@@ -49,7 +61,18 @@
       border: none;
       cursor: pointer;
     }
+  
+    /* Red Button (Opponent Scored) */
+    .red-button {
+      background-color: #FF0000;
+    }
+  
+    /* Green Button (Team Scored) */
+    .green-button {
+      background-color: #00FF00;
+    }
   </style>
+  
 
 </head>
 
@@ -64,10 +87,35 @@
 
   <form id="logForm">
     <!-- Form Fields -->
+    <select id="goalieSelection">
+      <option value="Goalie1">Goalie 1</option>
+      <option value="Goalie2">Goalie 2</option>
+      <option value="Goalie3">Goalie 3</option>
+      <option value="Goalie4">Goalie 4</option>
+      <option value="Goalie5">Goalie 5</option>
+    </select>
     <input type="number" id="savesInput" placeholder="Saves">
     <input type="number" id="goalsAgainstInput" placeholder="Goals Against">
     <input type="number" id="cleanSheetsInput" placeholder="Clean Sheets">
+    <select id="goalieKickInput">
+      <option value="">Goalie Kick</option>
+      <option value="Punt">Punt</option>
+      <option value="Goal Kick">Goal Kick</option>
+    </select>
+    <select id="qualifierInput">
+      <option value="">Qualifier</option>
+      <option value="Passed">Passed</option>
+      <option value="Missed">Missed</option>
+    </select>
+    <input type="text" id="notesInput" placeholder="Notes">
     <button type="submit">Log Entry</button>
+    <!-- New buttons for Game Start, Break Start, Break End, Game End, Team Scored, and Opponent Scored -->
+    <button type="button" onclick="logEvent('Game Start')">Game Start</button>
+    <button type="button" onclick="logEvent('Break Start')">Break Start</button>
+    <button type="button" onclick="logEvent('Break End')">Break End</button>
+    <button type="button" onclick="logEvent('Game End')">Game End</button>
+    <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button>
+    <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button>
   </form>
 
   <hr> <!-- Added <hr> to divide the parts -->
@@ -77,9 +125,14 @@
   <table id="log">
     <tr>
       <th>Time</th>
+      <th>Event</th>
+      <th>Goalie</th>
       <th>Saves</th>
       <th>Goals Against</th>
       <th>Clean Sheets</th>
+      <th>Goalie Kick</th>
+      <th>Qualifier</th>
+      <th>Notes</th>
     </tr>
   </table>
 
@@ -98,23 +151,45 @@
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      const goalieSelection = document.getElementById('goalieSelection').value;
       const savesInput = document.getElementById('savesInput').valueAsNumber;
       const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
       const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
-      logEntry({ time: new Date().toLocaleTimeString(), saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput });
+      const goalieKickInput = document.getElementById('goalieKickInput').value;
+      const qualifierInput = document.getElementById('qualifierInput').value;
+      const notesInput = document.getElementById('notesInput').value;
+      logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
       updateStats();
+      // Reset form fields
+      form.reset();
     });
+
+    function logEvent(eventType) {
+      const notesInput = document.getElementById('notesInput').value;
+      logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
+      updateStats();
+    }
 
     function logEntry(entryData) {
       const row = logTable.insertRow();
       const timeCell = row.insertCell(0);
-      const savesCell = row.insertCell(1);
-      const goalsAgainstCell = row.insertCell(2);
-      const cleanSheetsCell = row.insertCell(3);
+      const eventCell = row.insertCell(1);
+      const goalieCell = row.insertCell(2);
+      const savesCell = row.insertCell(3);
+      const goalsAgainstCell = row.insertCell(4);
+      const cleanSheetsCell = row.insertCell(5);
+      const goalieKickCell = row.insertCell(6);
+      const qualifierCell = row.insertCell(7);
+      const notesCell = row.insertCell(8);
       timeCell.textContent = entryData.time;
-      savesCell.textContent = entryData.saves;
-      goalsAgainstCell.textContent = entryData.goalsAgainst;
-      cleanSheetsCell.textContent = entryData.cleanSheets;
+      eventCell.textContent = entryData.event || '';
+      goalieCell.textContent = entryData.goalie || '';
+      savesCell.textContent = entryData.saves || ''; // Display blank for NaN
+      goalsAgainstCell.textContent = entryData.goalsAgainst || ''; // Display blank for NaN
+      cleanSheetsCell.textContent = entryData.cleanSheets || ''; // Display blank for NaN
+      goalieKickCell.textContent = entryData.goalieKick || '';
+      qualifierCell.textContent = entryData.qualifier || '';
+      notesCell.textContent = entryData.notes || '';
     }
 
     function updateStats() {
@@ -142,9 +217,14 @@
           const cells = row.querySelectorAll('td');
           const entry = {
             time: cells[0].textContent,
-            saves: parseInt(cells[1].textContent),
-            goalsAgainst: parseInt(cells[2].textContent),
-            cleanSheets: parseInt(cells[3].textContent),
+            event: cells[1].textContent,
+            goalie: cells[2].textContent,
+            saves: cells[3].textContent ? parseInt(cells[3].textContent) : '', // Display blank for NaN
+            goalsAgainst: cells[4].textContent ? parseInt(cells[4].textContent) : '', // Display blank for NaN
+            cleanSheets: cells[5].textContent ? parseInt(cells[5].textContent) : '', // Display blank for NaN
+            goalieKick: cells[6].textContent,
+            qualifier: cells[7].textContent,
+            notes: cells[8].textContent,
           };
           logEntries.push(entry);
         }
@@ -178,7 +258,7 @@
     }
 
     function clearLog() {
-      logTable.innerHTML = ''; 
+      logTable.innerHTML = '';
       saves = 0;
       goalsAgainst = 0;
       cleanSheets = 0;
