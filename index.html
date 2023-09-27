@@ -46,20 +46,14 @@
   
     #logForm button {
       padding: 5px 10px;
-      background-color: #007BFF;
       color: #fff;
       border: none;
       cursor: pointer;
     }
   
-    /* Buttons */
-    button {
-      margin-right: 10px;
-      padding: 5px 10px;
+    /* Blue Button */
+    .blue-button {
       background-color: #007BFF;
-      color: #fff;
-      border: none;
-      cursor: pointer;
     }
   
     /* Red Button (Opponent Scored) */
@@ -69,7 +63,7 @@
   
     /* Green Button (Team Scored) */
     .green-button {
-      background-color: #00FF00;
+      background-color: #00CC00; /* Changed to #00CC00 */
     }
   </style>
   
@@ -81,6 +75,14 @@
   <h1>Goalie Tracker</h1>
 
   <table id="stats">
+    <tr>
+      <th>Team Score</th>
+      <th>Opponent Score</th>
+    </tr>
+    <tr>
+      <td id="teamScore">0</td>
+      <td id="opponentScore">0</td>
+    </tr>
   </table>
 
   <h2>Log New Entry</h2>
@@ -108,12 +110,12 @@
       <option value="Missed">Missed</option>
     </select>
     <input type="text" id="notesInput" placeholder="Notes">
-    <button type="submit">Log Entry</button>
+    <button type="submit" class="blue-button">Log Entry</button>
     <!-- New buttons for Game Start, Break Start, Break End, Game End, Team Scored, and Opponent Scored -->
-    <button type="button" onclick="logEvent('Game Start')">Game Start</button>
-    <button type="button" onclick="logEvent('Break Start')">Break Start</button>
-    <button type="button" onclick="logEvent('Break End')">Break End</button>
-    <button type="button" onclick="logEvent('Game End')">Game End</button>
+    <button type="button" onclick="logEvent('Game Start')" class="blue-button">Game Start</button>
+    <button type="button" onclick="logEvent('Break Start')" class="blue-button">Break Start</button>
+    <button type="button" onclick="logEvent('Break End')" class="blue-button">Break End</button>
+    <button type="button" onclick="logEvent('Game End')" class="blue-button">Game End</button>
     <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button>
     <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button>
   </form>
@@ -144,10 +146,14 @@
     let saves = 0;
     let goalsAgainst = 0;
     let cleanSheets = 0;
+    let teamScore = 0;
+    let opponentScore = 0;
 
     const form = document.getElementById('logForm');
     const logTable = document.getElementById('log');
     const statsTable = document.getElementById('stats');
+    const teamScoreDisplay = document.getElementById('teamScore');
+    const opponentScoreDisplay = document.getElementById('opponentScore');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -168,6 +174,12 @@
       const notesInput = document.getElementById('notesInput').value;
       logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
       updateStats();
+      if (eventType === 'Team Scored') {
+        teamScore++;
+      } else if (eventType === 'Opponent Scored') {
+        opponentScore++;
+      }
+      updateScores();
     }
 
     function logEntry(entryData) {
@@ -206,7 +218,21 @@
           <td>Clean Sheets:</td>
           <td>${cleanSheets}</td>
         </tr>
+        <tr>
+          <td>Team Score:</td>
+          <td>${teamScore}</td>
+        </tr>
+        <tr>
+          <td>Opponent Score:</td>
+          <td>${opponentScore}</td>
+        </tr>
       `;
+    }
+
+
+    function updateScores() {
+      teamScoreDisplay.textContent = teamScore;
+      opponentScoreDisplay.textContent = opponentScore;
     }
 
     function exportJSON() {
@@ -263,6 +289,9 @@
       goalsAgainst = 0;
       cleanSheets = 0;
       updateStats();
+      teamScore = 0;
+      opponentScore = 0;
+      updateScores();
     }
 
   </script>
