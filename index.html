@@ -111,13 +111,33 @@
     </select>
     <input type="text" id="notesInput" placeholder="Notes">
     <button type="submit" class="blue-button">Log Entry</button>
-    <!-- New buttons for Game Start, Break Start, Break End, Game End, Team Scored, and Opponent Scored -->
-    <button type="button" onclick="logEvent('Game Start')" class="blue-button">Game Start</button>
-    <button type="button" onclick="logEvent('Break Start')" class="blue-button">Break Start</button>
-    <button type="button" onclick="logEvent('Break End')" class="blue-button">Break End</button>
-    <button type="button" onclick="logEvent('Game End')" class="blue-button">Game End</button>
-    <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button>
-    <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button>
+  </form>
+  <hr>
+  <form id="logForm">
+    <!-- Create three columns -->
+    <table>
+      <tr>
+        <td>
+          <div class="column">
+            <button type="button" onclick="logEvent('Game Start')" class="blue-button">Game Start</button>
+            <br><br><button type="button" onclick="logEvent('Break Start')" class="blue-button">Break Start</button>
+            <br><br><br><button type="button" onclick="logEvent('Break End')" class="blue-button">Break End</button>
+            <br><br><button type="button" onclick="logEvent('Game End')" class="blue-button">Game End</button>
+          </div>        
+        </td>
+        <td>
+          <!-- Goalie actions -->
+          <div>
+          </div>        
+        </td>
+        <td>
+          <div>
+            <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button>
+            <br><br><button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button>  
+          </div>        
+        </td>
+      </tr>
+    </table>   
   </form>
 
   <hr> <!-- Added <hr> to divide the parts -->
