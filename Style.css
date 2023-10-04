@@ -59,3 +59,17 @@ background-color: #FF0000;
 .green-button {
 background-color: #00CC00; /* Changed to #00CC00 */
 }
+
+#scoreButtonsTable {
+border-collapse: collapse;
+width: auto;
+}
+
+#scoreButtonsTable td {
+border: none;
+padding: 0;
+}
+
+#scoreButtonsTable button {
+border: none;
+}

@@ -49,6 +49,7 @@ function logEntry(entryData) {
   const goalieKickCell = row.insertCell(6);
   const qualifierCell = row.insertCell(7);
   const notesCell = row.insertCell(8);
+
   timeCell.textContent = entryData.time;
   eventCell.textContent = entryData.event || '';
   goalieCell.textContent = entryData.goalie || '';
@@ -63,6 +64,10 @@ function logEntry(entryData) {
 function updateStats() {
   statsTable.innerHTML = `
     <tr>
+      <td>Score:</td>
+      <td> ${teamScore} - ${opponentScore}</td>
+    </tr>
+    <tr>
       <td>Saves:</td>
       <td>${saves}</td>
     </tr>
@@ -73,14 +78,6 @@ function updateStats() {
     <tr>
       <td>Clean Sheets:</td>
       <td>${cleanSheets}</td>
-    </tr>
-    <tr>
-      <td>Team Score:</td>
-      <td>${teamScore}</td>
-    </tr>
-    <tr>
-      <td>Opponent Score:</td>
-      <td>${opponentScore}</td>
     </tr>
   `;
 }
@@ -149,3 +146,59 @@ function clearLog() {
   opponentScore = 0;
   updateScores();
 }
+// JavaScript variables to manage the game clock
+let gameClockInterval;
+let minutes = 0;
+let seconds = 0;
+let isPaused = false;
+
+// Function to start the game clock
+function startGameClock() {
+    if (!gameClockInterval) {
+      gameClockInterval = setInterval(updateGameClock, 1000);
+      document.getElementById('gameTimerStart').disabled = true; // Disable the "Game Start" button
+      document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+      updateGameClock(); // Call the function to update the clock immediately
+    }
+  }
+  
+
+// Function to update the game clock
+function updateGameClock() {
+  if (!isPaused) {
+    seconds++;
+    if (seconds === 60) {
+      seconds = 0;
+      minutes++;
+    }
+    // Update the clock display
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+  }
+}
+
+// Function to pause the game clock
+function pauseGameClock() {
+  isPaused = true;
+  document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+  document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
+}
+
+// Function to resume the game clock
+function resumeGameClock() {
+  isPaused = false;
+  document.getElementById('gameTimerBreakStart').disabled = true; // Disable the "Break Start" button
+  document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
+}
+
+// Function to stop the game clock
+// Function to stop the game clock without clearing the time
+function stopGameClock() {
+    clearInterval(gameClockInterval);
+    gameClockInterval = null;
+    isPaused = false;
+    document.getElementById('gameTimerStart').disabled = false; // Enable the "Game Start" button
+    document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+    document.getElementById('gameTimerBreakStop').disabled = true; // Disable the "Break End" button
+  }
+  
