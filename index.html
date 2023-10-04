@@ -47,11 +47,13 @@
       <table id="scoreButtonsTable">
         <tr>
           <td id="teamScoreButton">
-            <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button>
+            <!-- <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button> -->
+            <button type="button" class="green-button">Team Scored</button>
           </td>
           <td style="width: 20px;"></td> <!-- Adjust the width as needed for spacing -->
           <td id="opponentScoreButton">
-            <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button>
+            <!-- <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button> -->
+            <button type="button" class="red-button">Opponent Scored</button>
           </td>
         </tr>
       </table>
@@ -62,11 +64,13 @@
         <tr>
           <td id="gameTimerStart">
             <button type="button" onclick="logEvent('Game Start'); startGameClock();" class="blue-button">Game Start</button>
+            <!-- <button type="button" onclick="startGameClock();" class="blue-button">Game Start</button> -->
           </td>
           <td style="width: 20px;"></td>
 
           <td id="gameTimerBreakStart">
             <button type="button" onclick="logEvent('Break Start'); pauseGameClock();" class="blue-button">Break Start</button>
+            <!-- <button type="button" onclick="pauseGameClock();" class="blue-button">Break Start</button> -->
           </td>
           <td style="width: 20px;"></td>
         </tr>
@@ -104,10 +108,12 @@
         <tr>
           <td id="gameTimerBreakStop">
             <button type="button" onclick="logEvent('Break End'); resumeGameClock();" class="blue-button">Break End</button>
+            <!-- <button type="button" onclick="resumeGameClock();" class="blue-button">Break End</button> -->
           </td>
           <td style="width: 20px;"></td>
 
           <td id="gameTimerStop">
+            <!-- <button type="button" onclick="stopGameClock();" class="blue-button">Game End</button> -->
             <button type="button" onclick="logEvent('Game End'); stopGameClock();" class="blue-button">Game End</button>
           </td>
         </tr>

@@ -1,14 +1,25 @@
-let saves = 0;
-let goalsAgainst = 0;
-let cleanSheets = 0;
-let teamScore = 0;
-let opponentScore = 0;
+// Initialize a flag to check if data has been loaded from local storage
+let isDataLoaded = false;
+
+// Initialize counters, scores, and logs from localStorage or default values
+let saves = parseInt(localStorage.getItem('saves')) || 0;
+let goalsAgainst = parseInt(localStorage.getItem('goalsAgainst')) || 0;
+let cleanSheets = parseInt(localStorage.getItem('cleanSheets')) || 0;
+let teamScore = parseInt(localStorage.getItem('teamScore')) || 0;
+let opponentScore = parseInt(localStorage.getItem('opponentScore')) || 0;
+let logs = JSON.parse(localStorage.getItem('logs')) || [];
 
 const form = document.getElementById('logForm');
 const logTable = document.getElementById('log');
 const statsTable = document.getElementById('stats');
 const teamScoreDisplay = document.getElementById('teamScore');
 const opponentScoreDisplay = document.getElementById('opponentScore');
+
+// JavaScript variables to manage the game clock
+let gameClockInterval;
+let minutes = 0;
+let seconds = 0;
+let isPaused = false;
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -21,6 +32,7 @@ form.addEventListener('submit', (e) => {
   const notesInput = document.getElementById('notesInput').value;
   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
   updateStats();
+  saveDataToLocalStorage(); // Save data to localStorage after form submission
   // Reset form fields
   form.reset();
 });
@@ -35,9 +47,25 @@ function logEvent(eventType) {
     logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
     updateScores();
     updateStats();
+    saveDataToLocalStorage(); // Save data to localStorage after each event
   }
-  
 
+
+// // Event listeners for buttons
+// document.getElementById('gameTimerStart').addEventListener('click', () => {
+//     startGameClock();
+// });
+
+// Event listeners for buttons
+document.getElementById('teamScoreButton').addEventListener('click', () => {
+    logEvent('Team Scored');
+});
+
+document.getElementById('opponentScoreButton').addEventListener('click', () => {
+    logEvent('Opponent Scored');
+}); 
+
+// Function to log an entry and save it to logs array
 function logEntry(entryData) {
   const row = logTable.insertRow();
   const timeCell = row.insertCell(0);
@@ -59,6 +87,9 @@ function logEntry(entryData) {
   goalieKickCell.textContent = entryData.goalieKick || '';
   qualifierCell.textContent = entryData.qualifier || '';
   notesCell.textContent = entryData.notes || '';
+
+  // Add the entry to the logs array
+  logs.push(entryData);
 }
 
 function updateStats() {
@@ -81,7 +112,6 @@ function updateStats() {
     </tr>
   `;
 }
-
 
 function updateScores() {
   teamScoreDisplay.textContent = teamScore;
@@ -137,7 +167,8 @@ function importJSON() {
 }
 
 function clearLog() {
-  logTable.innerHTML = '';
+  console.log('Clearing log...');
+  clearLogTable();
   saves = 0;
   goalsAgainst = 0;
   cleanSheets = 0;
@@ -145,23 +176,26 @@ function clearLog() {
   teamScore = 0;
   opponentScore = 0;
   updateScores();
+
+  // Clear logs data in local storage
+  localStorage.removeItem('saves');
+  localStorage.removeItem('goalsAgainst');
+  localStorage.removeItem('cleanSheets');
+  localStorage.removeItem('teamScore');
+  localStorage.removeItem('opponentScore');
+  localStorage.removeItem('logs');
 }
-// JavaScript variables to manage the game clock
-let gameClockInterval;
-let minutes = 0;
-let seconds = 0;
-let isPaused = false;
 
 // Function to start the game clock
 function startGameClock() {
-    if (!gameClockInterval) {
-      gameClockInterval = setInterval(updateGameClock, 1000);
-      document.getElementById('gameTimerStart').disabled = true; // Disable the "Game Start" button
-      document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
-      updateGameClock(); // Call the function to update the clock immediately
-    }
+  if (!gameClockInterval) {
+    gameClockInterval = setInterval(updateGameClock, 1000);
+    document.getElementById('gameTimerStart').disabled = true; // Disable the "Game Start" button
+    document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+    updateGameClock(); // Call the function to update the clock immediately
+    // logEvent('Game Start'); // Call logEvent with 'Game Start' here
   }
-  
+}
 
 // Function to update the game clock
 function updateGameClock() {
@@ -177,28 +211,56 @@ function updateGameClock() {
   }
 }
 
-// Function to pause the game clock
 function pauseGameClock() {
   isPaused = true;
   document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
 }
 
-// Function to resume the game clock
 function resumeGameClock() {
   isPaused = false;
   document.getElementById('gameTimerBreakStart').disabled = true; // Disable the "Break Start" button
   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
 }
 
-// Function to stop the game clock
-// Function to stop the game clock without clearing the time
 function stopGameClock() {
-    clearInterval(gameClockInterval);
-    gameClockInterval = null;
-    isPaused = false;
-    document.getElementById('gameTimerStart').disabled = false; // Enable the "Game Start" button
-    document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
-    document.getElementById('gameTimerBreakStop').disabled = true; // Disable the "Break End" button
+  clearInterval(gameClockInterval);
+  gameClockInterval = null;
+  isPaused = false;
+  document.getElementById('gameTimerStart').disabled = false; // Enable the "Game Start" button
+  document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+  document.getElementById('gameTimerBreakStop').disabled = true; // Disable the "Break End" button
+}
+
+function saveDataToLocalStorage() {
+  console.log('Saving data to localStorage...');
+  localStorage.setItem('saves', saves.toString());
+  localStorage.setItem('goalsAgainst', goalsAgainst.toString());
+  localStorage.setItem('cleanSheets', cleanSheets.toString());
+  localStorage.setItem('teamScore', teamScore.toString());
+  localStorage.setItem('opponentScore', opponentScore.toString());
+  localStorage.setItem('logs', JSON.stringify(logs));
+}
+
+function clearLogTable() {
+  logTable.innerHTML = '';
+}
+
+function loadLogsFromLocalStorage() {
+  clearLogTable(); // Clear the log table before appending data from local storage
+  const logsData = JSON.parse(localStorage.getItem('logs')) || [];
+  logsData.forEach((entry) => {
+    logEntry(entry);
+  });
+}
+
+window.addEventListener('load', () => {
+  if (!isDataLoaded) {
+    clearLogTable(); // Clear the log table
+    updateStats();
+    updateScores();
+    loadLogsFromLocalStorage(); // Load logs data from localStorage
+    isDataLoaded = true; // Set the flag to true to avoid duplicate loading
   }
-  
+});
+
