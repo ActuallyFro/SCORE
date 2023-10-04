@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Sound SPA</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="clickButton">Click Me</button>
+    
+    <!-- Embedding the audio file directly -->
+    <audio id="clickSound" preload="auto">
+        <source src="data:audio/wav;base64,PUT_YOUR_BASE64_ENCODED_AUDIO_DATA_HERE" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Get references to the button and audio elements
+        const button = document.getElementById("clickButton");
+        const clickSound = document.getElementById("clickSound");
+
+        // Add a click event listener to the button
+        button.addEventListener("click", () => {
+            // Play the embedded audio file when the button is clicked
+            clickSound.play();
+        });
+    </script>
+</body>
+</html>
