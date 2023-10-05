@@ -1,3 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Goalie Tracker</title>
+
+  <!-- Load <STYLE> Style.css -->
+  <!-- <link rel="stylesheet" type="text/css" href="Style.css"> -->
+  <style>
+/* Table Styles */
+table {
+border-collapse: collapse;
+width: 100%;
+}
+
+th, td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: left;
+}
+
+th {
+background-color: #f2f2f2;
+font-weight: bold;
+}
+
+/* Form Styles */
+#logForm {
+margin-bottom: 20px;
+}
+
+#logForm input[type="number"] {
+width: 100px;
+padding: 5px;
+margin-right: 10px;
+}
+
+#logForm input[type="text"] {
+width: 200px;
+padding: 5px;
+margin-right: 10px;
+}
+
+#logForm select {
+width: 100px;
+padding: 5px;
+margin-right: 10px;
+}
+
+#logForm button {
+padding: 5px 10px;
+color: #fff;
+border: none;
+cursor: pointer;
+}
+
+/* Blue Button */
+.blue-button {
+background-color: #007BFF;
+}
+
+/* Red Button (Opponent Scored) */
+.red-button {
+background-color: #FF0000;
+}
+
+/* Green Button (Team Scored) */
+.green-button {
+background-color: #00CC00; /* Changed to #00CC00 */
+}
+
+#scoreButtonsTable {
+border-collapse: collapse;
+width: auto;
+}
+
+#scoreButtonsTable td {
+border: none;
+padding: 0;
+}
+
+#scoreButtonsTable button {
+border: none;
+}
+  </style>
+</head>
+
+
+<body>
+
+  <!-- Header -->
+  <h1><U>SCORE</U> - Scorekeeping Calculator, Observations, and Recorded Events</h1>
+  <hr>
+
+  <!-- Section I -->
+  <!-- ========= -->
+<table>
+  <tr>
+    <td>
+      <!-- Div for a game clock -->
+        <div id="gameClock">
+        <h2>Scorekeeping</h2>
+        <div id="clock">
+          <font size="12"><span id="minutes">00</span>:<span id="seconds">00</span></font>
+        </div>
+        <hr>
+      <table id="stats">
+        <tr>
+          <th>Team Score</th>
+          <th>Opponent Score</th>
+        </tr>
+        <tr>
+          <td id="teamScore">0</td>
+          <td id="opponentScore">0</td>
+        </tr>
+      </table>
+    </td>
+    
+    <td>
+
+  <h2>Game Events</h2>
+  <hr>
+  <form id="logForm">
+    <!-- Create three columns -->
+    <div style="text-align: center;">
+      <table id="scoreButtonsTable">
+        <tr>
+          <td id="teamScoreButton">
+            <!-- <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button> -->
+            <button type="button" class="green-button">Team Scored</button>
+          </td>
+          <td style="width: 20px;"></td> <!-- Adjust the width as needed for spacing -->
+          <td id="opponentScoreButton">
+            <!-- <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button> -->
+            <button type="button" class="red-button">Opponent Scored</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+<hr>
+    <div>
+      <table id="scoreButtonsTable">
+        <tr>
+          <td id="gameTimerStart">
+            <button type="button" onclick="logEvent('Game Start'); startGameClock(true);" class="blue-button">Game Start</button>
+            <!-- <button type="button" onclick="startGameClock();" class="blue-button">Game Start</button> -->
+          </td>
+          <td style="width: 20px;"></td>
+
+          <td id="gameTimerBreakStart">
+            <button type="button" onclick="logEvent('Break Start'); pauseGameClock();" class="blue-button">Break Start</button>
+            <!-- <button type="button" onclick="pauseGameClock();" class="blue-button">Break Start</button> -->
+          </td>
+          <td style="width: 20px;"></td>
+        </tr>
+      </table>
+      <hr>
+        <h2>Observations</h2>
+        <!-- <hr> -->
+        <form id="logForm">
+          <select id="goalieSelection">
+            <option value="Goalie1">Goalie 1</option>
+            <option value="Goalie2">Goalie 2</option>
+            <option value="Goalie3">Goalie 3</option>
+            <option value="Goalie4">Goalie 4</option>
+            <option value="Goalie5">Goalie 5</option>
+          </select>
+          <input type="number" id="savesInput" placeholder="Saves">
+          <!-- <input type="number" id="goalsAgainstInput" placeholder="Goals Against"> -->
+          <!-- <input type="number" id="cleanSheetsInput" placeholder="Clean Sheets"> -->
+          <select id="goalieKickInput">
+            <option value="">Goalie Kick</option>
+            <option value="Punt">Punt</option>
+            <option value="Goal Kick">Goal Kick</option>
+          </select>
+          <select id="qualifierInput">
+            <option value="">Qualifier</option>
+            <option value="Passed">Passed</option>
+            <option value="Missed">Missed</option>
+          </select>
+          <input type="text" id="notesInput" placeholder="Notes">
+          <button type="submit" class="blue-button">Log Entry</button>
+        </form>
+
+      <hr>
+      <table id="scoreButtonsTable">
+        <tr>
+          <td id="gameTimerBreakStop">
+            <button type="button" onclick="logEvent('Break End'); resumeGameClock();" class="blue-button">Break End</button>
+            <!-- <button type="button" onclick="resumeGameClock();" class="blue-button">Break End</button> -->
+          </td>
+          <td style="width: 20px;"></td>
+
+          <td id="gameTimerStop">
+            <!-- <button type="button" onclick="stopGameClock();" class="blue-button">Game End</button> -->
+            <button type="button" onclick="logEvent('Game End'); stopGameClock();" class="blue-button">Game End</button>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </form>
+
+</td>
+</tr>
+</table>
+
+  <!-- Section II -->
+  <!-- ========= -->
+  <hr>
+  <h2>Log Entries</h2>
+
+  <table id="log">
+    <tr>
+      <th>Time</th>
+      <th>Event</th>
+      <th>Goalie</th>
+      <th>Saves</th>
+      <!-- <th>Goals Against</th> -->
+      <!-- <th>Clean Sheets</th> -->
+      <th>Goalie Kick</th>
+      <th>Qualifier</th>
+      <th>Notes</th>
+    </tr>
+  </table>
+
+  <button onclick="exportJSON()">Export JSON</button>
+  <button onclick="importJSON()">Import JSON</button>
+  <button onclick="clearLog()">Clear Log</button>
+
+  <!-- <script src="Script.js"></script> -->
+<script> 
 // Initialize a flag to check if data has been loaded from local storage
 let isDataLoaded = false;
 
@@ -321,4 +552,7 @@ window.addEventListener('load', () => {
     isDataLoaded = true; // Set the flag to true to avoid duplicate loading
   }
 });
+</script>
 
+</body>
+</html>

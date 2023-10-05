@@ -63,7 +63,7 @@
       <table id="scoreButtonsTable">
         <tr>
           <td id="gameTimerStart">
-            <button type="button" onclick="logEvent('Game Start'); startGameClock();" class="blue-button">Game Start</button>
+            <button type="button" onclick="logEvent('Game Start'); startGameClock(true);" class="blue-button">Game Start</button>
             <!-- <button type="button" onclick="startGameClock();" class="blue-button">Game Start</button> -->
           </td>
           <td style="width: 20px;"></td>
@@ -87,8 +87,8 @@
             <option value="Goalie5">Goalie 5</option>
           </select>
           <input type="number" id="savesInput" placeholder="Saves">
-          <input type="number" id="goalsAgainstInput" placeholder="Goals Against">
-          <input type="number" id="cleanSheetsInput" placeholder="Clean Sheets">
+          <!-- <input type="number" id="goalsAgainstInput" placeholder="Goals Against"> -->
+          <!-- <input type="number" id="cleanSheetsInput" placeholder="Clean Sheets"> -->
           <select id="goalieKickInput">
             <option value="">Goalie Kick</option>
             <option value="Punt">Punt</option>
@@ -137,8 +137,8 @@
       <th>Event</th>
       <th>Goalie</th>
       <th>Saves</th>
-      <th>Goals Against</th>
-      <th>Clean Sheets</th>
+      <!-- <th>Goals Against</th> -->
+      <!-- <th>Clean Sheets</th> -->
       <th>Goalie Kick</th>
       <th>Qualifier</th>
       <th>Notes</th>
