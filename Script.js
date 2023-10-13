@@ -85,8 +85,6 @@ function logEntry(entryData) {
     const eventCell = row.insertCell(1);
     const goalieCell = row.insertCell(2);
     const savesCell = row.insertCell(3);
-    //   const goalsAgainstCell = row.insertCell(4);
-    //   const cleanSheetsCell = row.insertCell(5);
     const goalieKickCell = row.insertCell(4);
     const qualifierCell = row.insertCell(5);
     const notesCell = row.insertCell(6);
@@ -95,8 +93,6 @@ function logEntry(entryData) {
     eventCell.textContent = entryData.event || '';
     goalieCell.textContent = entryData.goalie || '';
     savesCell.textContent = entryData.saves || ''; // Display blank for NaN
-    //   goalsAgainstCell.textContent = entryData.goalsAgainst || ''; // Display blank for NaN
-    //   cleanSheetsCell.textContent = entryData.cleanSheets || ''; // Display blank for NaN
     goalieKickCell.textContent = entryData.goalieKick || '';
     qualifierCell.textContent = entryData.qualifier || '';
     notesCell.textContent = entryData.notes || '';
@@ -112,6 +108,10 @@ function logObservation(observationType) {
     const goalieKickInput = getGoalieKickInput(observationType); // Set goalieKickInput based on the observation type
     const qualifierInput = getQualifierInput(observationType); // Set qualifierInput based on the observation type
     const notesInput = document.getElementById('notesInput').value;
+
+    if (savesInput > 0) {
+      saves += savesInput;
+    }
   
     logEntry({
       time: new Date().toLocaleTimeString(),

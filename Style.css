@@ -111,3 +111,8 @@ background-color: #ab5656;
 background-color: #f59898;
 }
   
+.space {
+display: inline-block;
+width: 50px;
+}
+  
