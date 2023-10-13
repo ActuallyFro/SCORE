@@ -3,6 +3,13 @@ let isDataLoaded = false;
 
 // Initialize counters, scores, and logs from localStorage or default values
 let saves = parseInt(localStorage.getItem('saves')) || 0;
+let totalPuntsPassed = parseInt(localStorage.getItem('totalPuntsPassed')) || 0;
+let totalPuntsMissed = parseInt(localStorage.getItem('totalPuntsMissed')) || 0;
+let totalThrowsPassed = parseInt(localStorage.getItem('totalThrowsPassed')) || 0;
+let totalThrowsKicksMissed = parseInt(localStorage.getItem('totalThrowsKicksMissed')) || 0;
+let totalGoalieKicksPassed = parseInt(localStorage.getItem('totalGoalieKicksPassed')) || 0;
+let totalGoalieKicksMissed = parseInt(localStorage.getItem('totalGoalieKicksMissed')) || 0;
+
 // let goalsAgainst = parseInt(localStorage.getItem('goalsAgainst')) || 0;
 // let cleanSheets = parseInt(localStorage.getItem('cleanSheets')) || 0;
 let teamScore = parseInt(localStorage.getItem('teamScore')) || 0;
@@ -155,26 +162,40 @@ function updateStats() {
     </tr>
     <tr>
       <td>Saves:</td>
-      <td>${saves}</td>
-    </tr>
-    <tr>
-      <td>Saves %:</td>
-      <td>${((saves / (opponentScore + saves)) || 0).toFixed(3)}</td>
+      <td>${saves} (${((saves / (opponentScore + saves)) || 0).toFixed(3)})</td>
     </tr>
   `;
+    // <tr>
+    //   <td>Punts Passed:</td>
+    //   <td>${totalPuntsPassed}</td>
+    // </tr>
+    // <tr>
+    //   <td>Punts Missed:</td>
+    //   <td>${totalPuntsMissed}</td>
+    // </tr>
+    // <tr>
+    //   <td>Punts %:</td>
+    //   <td>${((totalPuntsPassed / (totalPuntsPassed + totalPuntsMissed)) || 0).toFixed(3)}</td>
+    // </tr>
+    // <tr>
+    //   <td>Throws Passed:</td>
+    //   <td>${totalThrowsPassed}</td>
+    // </tr>
+    // <tr>
+    //   <td>Throws Missed:</td>
+    //   <td>${totalThrowsKicksMissed}</td>  
+    // </tr>
+    // <tr>
+    //   <td>Goalie Kicks Passed:</td>
+    //   <td>${totalGoalieKicksPassed}</td>
+    // </tr>
+    // <tr>
+    //   <td>Goalie Kicks Missed:</td>
+    //   <td>${totalGoalieKicksMissed}</td>  
+    // </tr>
+
       // <td>${((saves / (opponentScore + saves)) * 100 || 0).toFixed(2)}%</td>
 }
-
-{/* 
-    <tr>
-      <td>Goals Against:</td>
-      <td>${goalsAgainst}</td>
-    </tr>
-    <tr>
-      <td>Clean Sheets:</td>
-      <td>${cleanSheets}</td>
-    </tr> 
-*/}
 
 function updateScores() {
   teamScoreDisplay.textContent = teamScore;
@@ -246,8 +267,13 @@ function clearLog() {
 
   // Clear logs data in local storage
   localStorage.removeItem('saves');
-  //   localStorage.removeItem('goalsAgainst');
-  //   localStorage.removeItem('cleanSheets');
+  localStorage.removeItem('totalPuntsPassed');
+  localStorage.removeItem('totalPuntsMissed');
+  localStorage.removeItem('totalThrowsPassed');
+  localStorage.removeItem('totalThrowsKicksMissed');
+  localStorage.removeItem('totalGoalieKicksPassed');
+  localStorage.removeItem('totalGoalieKicksMissed');
+  
   localStorage.removeItem('teamScore');
   localStorage.removeItem('opponentScore');
   localStorage.removeItem('logs');

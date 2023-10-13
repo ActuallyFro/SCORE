@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Goalie Tracker</title>
+
+  <style>
+    /* Table Styles */
+    table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    }
+
+    th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    }
+
+    /* Form Styles */
+    #logForm {
+    margin-bottom: 20px;
+    }
+
+    #logForm input[type="number"] {
+    width: 100px;
+    padding: 5px;
+    margin-right: 10px;
+    }
+
+    #logForm input[type="text"] {
+    width: 200px;
+    padding: 5px;
+    margin-right: 10px;
+    }
+
+    #logForm select {
+    width: 100px;
+    padding: 5px;
+    margin-right: 10px;
+    }
+
+    #logForm button {
+    padding: 5px 10px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    }
+
+    /* Blue Button */
+    .blue-button {
+    background-color: #007BFF;
+    }
+
+    /* Red Button (Opponent Scored) */
+    .red-button {
+    background-color: #FF0000;
+    }
+
+    /* Green Button (Team Scored) */
+    .green-button {
+    background-color: #00CC00; /* Changed to #00CC00 */
+    }
+
+    #scoreButtonsTable {
+    border-collapse: collapse;
+    width: auto;
+    }
+
+    #scoreButtonsTable td {
+    border: none;
+    padding: 0;
+    }
+
+    #scoreButtonsTable button {
+    border: none;
+    }
+
+    /* Red Button (Opponent Scored) */
+    .red-button {
+    background-color: #FF0000;
+    }
+
+    /* Green Button (Team Scored) */
+    .green-button {
+    background-color: #00CC00;
+    }
+
+    /* New Button Colors for Observation Types */
+    /* Goalie Save */
+    .goalie-save-button {
+    background-color: #d8d81f;
+    color: #000000;
+    }
+
+    /* Punt with Pass */
+    .punt-with-pass-button {
+    background-color: #222255;
+    }
+
+    /* Punt with Missed */
+    .punt-with-missed-button {
+    background-color: #BBCCEE;
+    }
+
+    /* Goalie Kick with Passed */
+    .goalie-kick-with-passed-button {
+    background-color: #ab5656;
+    }
+
+    /* Goalie Kick with Missed */
+    .goalie-kick-with-missed-button {
+    background-color: #f59898;
+    }
+    
+    .space {
+    display: inline-block;
+    width: 50px;
+    }
+  </style>
+</head>
+
+<!-- Style: background color = #777777 -->
+<!-- <body style="background-color: #AAAAAA;"> -->
+<body>
+
+  <!-- Header -->
+  <h1><U>SCORE</U> - Scorekeeping Calculator, Observations, and Recorded Events</h1>
+  <hr>
+
+  <div>
+    <h2>Scorekeeping Calculations</h2>
+    <div id="clock">
+      <font size="12"><span id="minutes">00</span>:<span id="seconds">00</span></font>
+    </div>      
+
+    <table id="stats">
+      <tr>
+        <th>Team Score</th>
+        <th>Opponent Score</th>
+      </tr>
+      <tr>
+        <td id="teamScore">0</td>
+        <td id="opponentScore">0</td>
+      </tr>
+    </table>
+
+  </div>
+
+  <hr>
+  
+  <div>
+    <h2>Observations</h2>
+    <form id="logForm">
+      <select id="goalieSelection">
+        <option value="Goalie1">Goalie 1</option>
+        <option value="Goalie2">Goalie 2</option>
+        <option value="Goalie3">Goalie 3</option>
+        <option value="Goalie4">Goalie 4</option>
+        <option value="Goalie5">Goalie 5</option>
+      </select>
+
+      <input type="text" id="notesInput" placeholder="Notes">
+      <button type="submit" class="blue-button">Log Entry</button>
+    </form>
+  </div>
+  
+  <hr>
+  
+  <div>
+    <h2>Game Events</h2>
+    <form id="logForm">
+      <div id="scoreButtonsContainer">
+        <button id="gameTimerStart" onclick="logEvent('Game Start'); startGameClock(true);" class="blue-button">Game Start</button>
+        <div class="space" style="width: 50px;"></div>
+        <button id="gameTimerBreakStart" onclick="logEvent('Break Start'); pauseGameClock();" class="blue-button">Break Start</button>
+      </div>
+
+      <!-- <table id="scoreButtonsTable">
+        <tr>
+          <td id="gameTimerStart">
+            <button type="button" onclick="logEvent('Game Start'); startGameClock(true);" class="blue-button">Game Start</button>
+          </td>
+
+          <td style="width: 20px;"></td>
+  
+          <td id="gameTimerBreakStart">
+            <button type="button" onclick="logEvent('Break Start'); pauseGameClock();" class="blue-button">Break Start</button>
+          </td>
+        </tr>
+      </table> -->
+      <hr>
+      <!-- Create three columns -->
+      <div style="text-align: center;">
+        <table id="scoreButtonsTable">
+          <tr>
+            <td id="teamScoreButton">
+              <!-- <button type="button" class="green-button" onclick="logEvent('Team Scored')">Team Scored</button> -->
+              <button type="button" class="green-button">Team Scored</button>
+            </td>
+            <td style="width: 20px;"></td> <!-- Adjust the width as needed for spacing -->
+            <td id="opponentScoreButton">
+              <!-- <button type="button" class="red-button" onclick="logEvent('Opponent Scored')">Opponent Scored</button> -->
+              <button type="button" class="red-button">Opponent Scored</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+  
+      <hr>
+      <div>
+        <table id="scoreButtonsTable">
+          <tr>
+            <td>
+              <!-- <div "goalieSelection" -->
+              <button type="button" onclick="logObservation('Goalie Save');" class="blue-button goalie-save-button">Goalie Save</button>
+              <hr>
+              <button type="button" onclick="logObservation('Punt with Pass');" class="blue-button punt-with-pass-button">Punt with Pass</button>
+              <button type="button" onclick="logObservation('Punt with Missed');" class="blue-button punt-with-missed-button">Punt with Missed</button>
+              <hr>
+              <button type="button" onclick="logObservation('Goalie Kick with Passed');" class="blue-button goalie-kick-with-passed-button">Goalie Kick with Passed</button>
+              <button type="button" onclick="logObservation('Goalie Kick with Missed');" class="blue-button goalie-kick-with-missed-button">Goalie Kick with Missed</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+  
+        <hr>
+        <table id="scoreButtonsTable">
+          <tr>
+            <td id="gameTimerBreakStop">
+              <button type="button" onclick="logEvent('Break End'); resumeGameClock();" class="blue-button">Break End</button>
+              <!-- <button type="button" onclick="resumeGameClock();" class="blue-button">Break End</button> -->
+            </td>
+            <td style="width: 20px;"></td>
+  
+            <td id="gameTimerStop">
+              <!-- <button type="button" onclick="stopGameClock();" class="blue-button">Game End</button> -->
+              <button type="button" onclick="logEvent('Game End'); stopGameClock();" class="blue-button">Game End</button>
+            </td>
+          </tr>
+        </table>
+  
+      </div>
+    </form>
+  </div>
+
+  <hr>
+
+  <div>
+    <h2>Log Entries</h2>
+    <table id="log">
+      <tr>
+        <th>Time</th>
+        <th>Event</th>
+        <th>Goalie</th>
+        <th>Saves</th>
+        <th>Goalie Kick</th>
+        <th>Qualifier</th>
+        <th>Notes</th>
+      </tr>
+    </table>  
+  </div>
+
+  <hr>
+
+  <div>
+    <button onclick="exportJSON()">Export JSON</button>
+    <button onclick="importJSON()">Import JSON</button>
+    <button onclick="clearLog()">Clear Log</button>  
+  </div>
+
+  <script>
+    // Initialize a flag to check if data has been loaded from local storage
+    let isDataLoaded = false;
+
+    // Initialize counters, scores, and logs from localStorage or default values
+    let saves = parseInt(localStorage.getItem('saves')) || 0;
+    let totalPuntsPassed = parseInt(localStorage.getItem('totalPuntsPassed')) || 0;
+    let totalPuntsMissed = parseInt(localStorage.getItem('totalPuntsMissed')) || 0;
+    let totalThrowsPassed = parseInt(localStorage.getItem('totalThrowsPassed')) || 0;
+    let totalThrowsKicksMissed = parseInt(localStorage.getItem('totalThrowsKicksMissed')) || 0;
+    let totalGoalieKicksPassed = parseInt(localStorage.getItem('totalGoalieKicksPassed')) || 0;
+    let totalGoalieKicksMissed = parseInt(localStorage.getItem('totalGoalieKicksMissed')) || 0;
+
+    // let goalsAgainst = parseInt(localStorage.getItem('goalsAgainst')) || 0;
+    // let cleanSheets = parseInt(localStorage.getItem('cleanSheets')) || 0;
+    let teamScore = parseInt(localStorage.getItem('teamScore')) || 0;
+    let opponentScore = parseInt(localStorage.getItem('opponentScore')) || 0;
+    let logs = [];
+
+    const form = document.getElementById('logForm');
+    const logTable = document.getElementById('log');
+    const statsTable = document.getElementById('stats');
+    const teamScoreDisplay = document.getElementById('teamScore');
+    const opponentScoreDisplay = document.getElementById('opponentScore');
+
+    // JavaScript variables to manage the game clock
+    let gameClockInterval;
+    let minutes = parseInt(localStorage.getItem('savedMinutes')) || 0;
+    let seconds = parseInt(localStorage.getItem('savedSeconds')) || 0;
+    let isPaused = localStorage.getItem('isClockPaused') == 'true';
+    console.log('Is Clock Paused: ' + isPaused);
+
+    form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const goalieSelection = document.getElementById('goalieSelection').value;
+    const savesInput = document.getElementById('savesInput').valueAsNumber;
+    
+    // Store the selected goalieSelection before resetting the form
+    const selectedGoalie = document.getElementById('goalieSelection').value;
+    
+    if (savesInput > 0) {
+        saves += savesInput;
+    }
+        //   const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
+        //   const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
+        const goalieKickInput = document.getElementById('goalieKickInput').value;
+        const qualifierInput = document.getElementById('qualifierInput').value;
+        const notesInput = document.getElementById('notesInput').value;
+        //   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+        // logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+        logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+        updateStats();
+        saveDataToLocalStorage(); // Save data to localStorage after form submission
+        // Reset form fields
+        form.reset();
+
+        // Set the selected value back to the <select> element
+        document.getElementById('goalieSelection').value = selectedGoalie;
+    });
+
+    function logEvent(eventType) {
+        const notesInput = document.getElementById('notesInput').value;
+        if (eventType === 'Team Scored') {
+        teamScore++;
+        } else if (eventType === 'Opponent Scored') {
+        opponentScore++;
+        }
+        logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
+        updateScores();
+        updateStats();
+        saveDataToLocalStorage(); // Save data to localStorage after each event
+    }
+
+
+    // // Event listeners for buttons
+    // document.getElementById('gameTimerStart').addEventListener('click', () => {
+    //     startGameClock();
+    // });
+
+    // Event listeners for buttons
+    document.getElementById('teamScoreButton').addEventListener('click', () => {
+        logEvent('Team Scored');
+    });
+
+    document.getElementById('opponentScoreButton').addEventListener('click', () => {
+        logEvent('Opponent Scored');
+    }); 
+
+    // Function to log an entry and save it to logs array
+    function logEntry(entryData) {
+        const row = logTable.insertRow();
+        const timeCell = row.insertCell(0);
+        const eventCell = row.insertCell(1);
+        const goalieCell = row.insertCell(2);
+        const savesCell = row.insertCell(3);
+        const goalieKickCell = row.insertCell(4);
+        const qualifierCell = row.insertCell(5);
+        const notesCell = row.insertCell(6);
+
+        timeCell.textContent = entryData.time;
+        eventCell.textContent = entryData.event || '';
+        goalieCell.textContent = entryData.goalie || '';
+        savesCell.textContent = entryData.saves || ''; // Display blank for NaN
+        goalieKickCell.textContent = entryData.goalieKick || '';
+        qualifierCell.textContent = entryData.qualifier || '';
+        notesCell.textContent = entryData.notes || '';
+
+    // Add the entry to the logs array
+    logs.push(entryData);
+    }
+
+    // Event listeners for observation buttons
+    function logObservation(observationType) {
+        const goalieSelection = document.getElementById('goalieSelection').value;
+        const savesInput = observationType === 'Goalie Save' ? 1 : 0; // Set savesInput based on the observation type
+        const goalieKickInput = getGoalieKickInput(observationType); // Set goalieKickInput based on the observation type
+        const qualifierInput = getQualifierInput(observationType); // Set qualifierInput based on the observation type
+        const notesInput = document.getElementById('notesInput').value;
+
+        if (savesInput > 0) {
+        saves += savesInput;
+        }
+    
+        logEntry({
+        time: new Date().toLocaleTimeString(),
+        goalie: goalieSelection,
+        saves: savesInput,
+        goalieKick: goalieKickInput,
+        qualifier: qualifierInput,
+        notes: notesInput,
+        });
+    
+        updateStats();
+        saveDataToLocalStorage(); // Save data to localStorage after form submission
+        form.reset(); // Reset form fields
+    }
+    
+    // Function to determine goalieKickInput based on observation type
+    function getGoalieKickInput(observationType) {
+        if (observationType === 'Punt with Pass' || observationType === 'Punt with Missed') {
+        return 'Punt';
+        } else if (observationType === 'Goalie Kick with Passed' || observationType === 'Goalie Kick with Missed') {
+        return 'Goal Kick';
+        }
+        return ''; // Default value
+    }
+    
+    // Function to determine qualifierInput based on observation type
+    function getQualifierInput(observationType) {
+        if (observationType === 'Punt with Pass' || observationType === 'Goalie Kick with Passed') {
+        return 'Passed';
+        } else if (observationType === 'Punt with Missed' || observationType === 'Goalie Kick with Missed') {
+        return 'Missed';
+        }
+        return ''; // Default value
+    }  
+
+    function updateStats() {
+    statsTable.innerHTML = `
+        <tr>
+        <td>Score:</td>
+        <td> ${teamScore} - ${opponentScore}</td>
+        </tr>
+        <tr>
+        <td>Saves:</td>
+        <td>${saves} (${((saves / (opponentScore + saves)) || 0).toFixed(3)})</td>
+        </tr>
+    `;
+        // <tr>
+        //   <td>Punts Passed:</td>
+        //   <td>${totalPuntsPassed}</td>
+        // </tr>
+        // <tr>
+        //   <td>Punts Missed:</td>
+        //   <td>${totalPuntsMissed}</td>
+        // </tr>
+        // <tr>
+        //   <td>Punts %:</td>
+        //   <td>${((totalPuntsPassed / (totalPuntsPassed + totalPuntsMissed)) || 0).toFixed(3)}</td>
+        // </tr>
+        // <tr>
+        //   <td>Throws Passed:</td>
+        //   <td>${totalThrowsPassed}</td>
+        // </tr>
+        // <tr>
+        //   <td>Throws Missed:</td>
+        //   <td>${totalThrowsKicksMissed}</td>  
+        // </tr>
+        // <tr>
+        //   <td>Goalie Kicks Passed:</td>
+        //   <td>${totalGoalieKicksPassed}</td>
+        // </tr>
+        // <tr>
+        //   <td>Goalie Kicks Missed:</td>
+        //   <td>${totalGoalieKicksMissed}</td>  
+        // </tr>
+
+        // <td>${((saves / (opponentScore + saves)) * 100 || 0).toFixed(2)}%</td>
+    }
+
+    function updateScores() {
+    teamScoreDisplay.textContent = teamScore;
+    opponentScoreDisplay.textContent = opponentScore;
+    }
+
+    function exportJSON() {
+    const logEntries = [];
+    const rows = logTable.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        if (index !== 0) {
+        const cells = row.querySelectorAll('td');
+        const entry = {
+            time: cells[0].textContent,
+            event: cells[1].textContent,
+            goalie: cells[2].textContent,
+            saves: cells[3].textContent ? parseInt(cells[3].textContent) : '', // Display blank for NaN
+            // goalsAgainst: cells[4].textContent ? parseInt(cells[4].textContent) : '', // Display blank for NaN
+            // cleanSheets: cells[5].textContent ? parseInt(cells[5].textContent) : '', // Display blank for NaN
+            goalieKick: cells[4].textContent,
+            qualifier: cells[5].textContent,
+            notes: cells[6].textContent,
+        };
+        logEntries.push(entry);
+        }
+    });
+    const jsonBlob = new Blob([JSON.stringify(logEntries)], { type: 'application/json' });
+    const url = URL.createObjectURL(jsonBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'goalie_log.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    }
+
+    function importJSON() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (event) {
+        const importedData = JSON.parse(event.target.result);
+        importedData.forEach((entry) => {
+            logEntry(entry);
+        });
+        updateStats();
+        };
+        reader.readAsText(file);
+    });
+    input.click();
+    }
+
+    function clearLog() {
+    console.log('Clearing log...');
+    clearLogTable();
+    saves = 0;
+    minutes = 0;
+    seconds = 0;
+    updateGameClock();
+
+    //   goalsAgainst = 0;
+    //   cleanSheets = 0;
+    teamScore = 0;
+    opponentScore = 0;
+    updateStats();
+    updateScores();
+
+    // Clear logs data in local storage
+    localStorage.removeItem('saves');
+    localStorage.removeItem('totalPuntsPassed');
+    localStorage.removeItem('totalPuntsMissed');
+    localStorage.removeItem('totalThrowsPassed');
+    localStorage.removeItem('totalThrowsKicksMissed');
+    localStorage.removeItem('totalGoalieKicksPassed');
+    localStorage.removeItem('totalGoalieKicksMissed');
+    
+    localStorage.removeItem('teamScore');
+    localStorage.removeItem('opponentScore');
+    localStorage.removeItem('logs');
+    localStorage.removeItem('savedMinutes');
+    localStorage.removeItem('savedSeconds');
+    localStorage.removeItem('isClockPaused');
+    isPaused = true;
+
+    // Reset the <select> element to the default option
+    document.getElementById('goalieSelection').value = "Goalie1";
+    }
+
+
+    // Function to start the game clock
+    function startGameClock(isStartOrRestart) {
+    //console.log('Current startGameClock Var: ' + isStartOrRestart);
+
+    if (!gameClockInterval) {
+        gameClockInterval = setInterval(updateGameClock, 1000);
+        //TODO -- decide if needed:
+        // document.getElementById('gameTimerStart').disabled = true; // Disable the "Game Start" button
+        // document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+        updateGameClock();
+        // logEvent('Game Start'); // Call logEvent with 'Game Start' here
+    }
+    if (isStartOrRestart){
+        updateGameClock(isStartOrRestart);
+    }
+    }
+
+    // Function to update the game clock
+    function updateGameClock(isStartOrRestart) {
+        // console.log('Current updateGameClock Var: ' + isStartOrRestart);
+        if (isStartOrRestart){
+            console.log('RESETTING Game Clock!');
+
+            seconds = 0;
+            minutes = 0;
+            isPaused = false;
+        }
+
+        if (!isPaused) {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+        }
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        saveDataToLocalStorageTime();
+    }
+
+    function pauseGameClock() {
+        isPaused = true;
+        //   document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+        //   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
+        // saveDataToLocalStorageTime();
+    }
+
+    function resumeGameClock() {
+        isPaused = false;
+        updateGameClock();
+        //   document.getElementById('gameTimerBreakStart').disabled = true; // Disable the "Break Start" button
+        //   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
+        // saveDataToLocalStorageTime();
+    }
+
+    function stopGameClock() {
+    clearInterval(gameClockInterval);
+    gameClockInterval = null;
+    isPaused = true;
+    saveDataToLocalStorageTime();
+    //   document.getElementById('gameTimerStart').disabled = false; // Enable the "Game Start" button
+    //   document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
+    //   document.getElementById('gameTimerBreakStop').disabled = true; // Disable the "Break End" button
+    }
+
+
+    function saveDataToLocalStorageTime(){
+        localStorage.setItem('savedMinutes',minutes.toString() );
+        localStorage.setItem('savedSeconds', seconds.toString());
+        localStorage.setItem('isClockPaused', isPaused.toString()); 
+    }
+
+    function saveDataToLocalStorage() {
+        console.log('Saving data to localStorage...');
+        localStorage.setItem('saves', saves.toString());
+        //   localStorage.setItem('goalsAgainst', goalsAgainst.toString());
+        //   localStorage.setItem('cleanSheets', cleanSheets.toString());
+        localStorage.setItem('teamScore', teamScore.toString());
+        localStorage.setItem('opponentScore', opponentScore.toString());
+        localStorage.setItem('logs', JSON.stringify(logs));
+        saveDataToLocalStorageTime();
+    }
+
+    function clearLogTable() {
+        logTable.innerHTML = `
+        <tr>
+        <th>Time</th>
+        <th>Event</th>
+        <th>Goalie</th>
+        <th>Saves</th>
+        <!-- <th>Goals Against</th> -->
+        <!-- <th>Clean Sheets</th> -->
+        <th>Goalie Kick</th>
+        <th>Qualifier</th>
+        <th>Notes</th>
+        </tr>
+        `;
+    }
+
+    function loadLogsFromLocalStorage() {
+    clearLogTable(); // Clear the log table before appending data from local storage
+    const logsData = JSON.parse(localStorage.getItem('logs')) || [];
+    logsData.forEach((entry) => {
+        logEntry(entry);
+    });
+    }
+
+    window.addEventListener('load', () => {
+    if (!isDataLoaded) {
+        clearLogTable(); // Clear the log table
+        updateStats();
+        updateScores();
+        loadLogsFromLocalStorage(); // Load logs data from localStorage
+        startGameClock();
+        isDataLoaded = true; // Set the flag to true to avoid duplicate loading
+    }
+    });
+
+
+  </script>
+
+</body>
+</html>
