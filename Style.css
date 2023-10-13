@@ -73,3 +73,41 @@ padding: 0;
 #scoreButtonsTable button {
 border: none;
 }
+
+/* Red Button (Opponent Scored) */
+.red-button {
+background-color: #FF0000;
+}
+
+/* Green Button (Team Scored) */
+.green-button {
+background-color: #00CC00;
+}
+
+/* New Button Colors for Observation Types */
+/* Goalie Save */
+.goalie-save-button {
+background-color: #d8d81f;
+color: #000000;
+}
+
+/* Punt with Pass */
+.punt-with-pass-button {
+background-color: #222255;
+}
+
+/* Punt with Missed */
+.punt-with-missed-button {
+background-color: #BBCCEE;
+}
+
+/* Goalie Kick with Passed */
+.goalie-kick-with-passed-button {
+background-color: #ab5656;
+}
+
+/* Goalie Kick with Missed */
+.goalie-kick-with-missed-button {
+background-color: #f59898;
+}
+  

@@ -7,7 +7,8 @@
   <link rel="stylesheet" type="text/css" href="Style.css">
 </head>
 
-<body>
+<!-- Style: background color = #777777 -->
+<body style="background-color: #AAAAAA;">
 
   <!-- Header -->
   <h1><U>SCORE</U> - Scorekeeping Calculator, Observations, and Recorded Events</h1>
@@ -101,6 +102,40 @@
           </select>
           <input type="text" id="notesInput" placeholder="Notes">
           <button type="submit" class="blue-button">Log Entry</button>
+
+          <div>
+            <table id="scoreButtonsTable">
+              <tr>
+                <td>
+                  <button type="button" onclick="logObservation('Goalie Save');" class="blue-button goalie-save-button">Goalie Save</button>
+                </td>
+                <td style="width: 10px;"></td>
+                <td></td>
+              </tr>
+              <tr style="height: 15px;"><td></td><td></td><td></td></tr>
+              <tr>
+                <td>
+                  <button type="button" onclick="logObservation('Punt with Pass');" class="blue-button punt-with-pass-button">Punt with Pass</button>
+                </td>
+                <td></td>
+                <td>
+                  <button type="button" onclick="logObservation('Punt with Missed');" class="blue-button punt-with-missed-button">Punt with Missed</button>
+                </td>
+              </tr>
+              <tr style="height: 15px;"><td></td><td></td><td></td></tr>
+              <tr>
+                <td>
+                  <button type="button" onclick="logObservation('Goalie Kick with Passed');" class="blue-button goalie-kick-with-passed-button">Goalie Kick with Passed</button>
+                </td>
+                <td></td>
+                <td>
+                  <button type="button" onclick="logObservation('Goalie Kick with Missed');" class="blue-button goalie-kick-with-missed-button">Goalie Kick with Missed</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+          
+          
         </form>
 
       <hr>

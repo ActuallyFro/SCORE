@@ -99,6 +99,48 @@ function logEntry(entryData) {
   logs.push(entryData);
 }
 
+// Event listeners for observation buttons
+function logObservation(observationType) {
+    const goalieSelection = document.getElementById('goalieSelection').value;
+    const savesInput = observationType === 'Goalie Save' ? 1 : 0; // Set savesInput based on the observation type
+    const goalieKickInput = getGoalieKickInput(observationType); // Set goalieKickInput based on the observation type
+    const qualifierInput = getQualifierInput(observationType); // Set qualifierInput based on the observation type
+    const notesInput = document.getElementById('notesInput').value;
+  
+    logEntry({
+      time: new Date().toLocaleTimeString(),
+      goalie: goalieSelection,
+      saves: savesInput,
+      goalieKick: goalieKickInput,
+      qualifier: qualifierInput,
+      notes: notesInput,
+    });
+  
+    updateStats();
+    saveDataToLocalStorage(); // Save data to localStorage after form submission
+    form.reset(); // Reset form fields
+  }
+  
+  // Function to determine goalieKickInput based on observation type
+  function getGoalieKickInput(observationType) {
+    if (observationType === 'Punt with Pass' || observationType === 'Punt with Missed') {
+      return 'Punt';
+    } else if (observationType === 'Goalie Kick with Passed' || observationType === 'Goalie Kick with Missed') {
+      return 'Goal Kick';
+    }
+    return ''; // Default value
+  }
+  
+  // Function to determine qualifierInput based on observation type
+  function getQualifierInput(observationType) {
+    if (observationType === 'Punt with Pass' || observationType === 'Goalie Kick with Passed') {
+      return 'Passed';
+    } else if (observationType === 'Punt with Missed' || observationType === 'Goalie Kick with Missed') {
+      return 'Missed';
+    }
+    return ''; // Default value
+  }  
+
 function updateStats() {
   statsTable.innerHTML = `
     <tr>
