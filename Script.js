@@ -157,7 +157,12 @@ function updateStats() {
       <td>Saves:</td>
       <td>${saves}</td>
     </tr>
+    <tr>
+      <td>Saves %:</td>
+      <td>${((saves / (opponentScore + saves)) || 0).toFixed(3)}</td>
+    </tr>
   `;
+      // <td>${((saves / (opponentScore + saves)) * 100 || 0).toFixed(2)}%</td>
 }
 
 {/* 
