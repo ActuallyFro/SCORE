@@ -225,32 +225,36 @@ function importJSON() {
 }
 
 function clearLog() {
-    console.log('Clearing log...');
-    clearLogTable();
-    saves = 0;
-    minutes = 0;
-    seconds = 0;
-    updateGameClock();
+  console.log('Clearing log...');
+  clearLogTable();
+  saves = 0;
+  minutes = 0;
+  seconds = 0;
+  updateGameClock();
 
-    //   goalsAgainst = 0;
-    //   cleanSheets = 0;
-    teamScore = 0;
-    opponentScore = 0;
-    updateStats();
-    updateScores();
+  //   goalsAgainst = 0;
+  //   cleanSheets = 0;
+  teamScore = 0;
+  opponentScore = 0;
+  updateStats();
+  updateScores();
 
-    // Clear logs data in local storage
-    localStorage.removeItem('saves');
-    //   localStorage.removeItem('goalsAgainst');
-    //   localStorage.removeItem('cleanSheets');
-    localStorage.removeItem('teamScore');
-    localStorage.removeItem('opponentScore');
-    localStorage.removeItem('logs');
-    localStorage.removeItem('savedMinutes');
-    localStorage.removeItem('savedSeconds');
-    localStorage.removeItem('isClockPaused');
-    isPaused = true;
+  // Clear logs data in local storage
+  localStorage.removeItem('saves');
+  //   localStorage.removeItem('goalsAgainst');
+  //   localStorage.removeItem('cleanSheets');
+  localStorage.removeItem('teamScore');
+  localStorage.removeItem('opponentScore');
+  localStorage.removeItem('logs');
+  localStorage.removeItem('savedMinutes');
+  localStorage.removeItem('savedSeconds');
+  localStorage.removeItem('isClockPaused');
+  isPaused = true;
+
+  // Reset the <select> element to the default option
+  document.getElementById('goalieSelection').value = "Goalie1";
 }
+
 
 // Function to start the game clock
 function startGameClock(isStartOrRestart) {
