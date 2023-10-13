@@ -23,13 +23,16 @@ let isPaused = localStorage.getItem('isClockPaused') == 'true';
 console.log('Is Clock Paused: ' + isPaused);
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const goalieSelection = document.getElementById('goalieSelection').value;
-    const savesInput = document.getElementById('savesInput').valueAsNumber;
-    console.log("Saves value: " + savesInput);
-    if (savesInput > 0){
-        saves +=savesInput;
-    }
+  e.preventDefault();
+  const goalieSelection = document.getElementById('goalieSelection').value;
+  const savesInput = document.getElementById('savesInput').valueAsNumber;
+  
+  // Store the selected goalieSelection before resetting the form
+  const selectedGoalie = document.getElementById('goalieSelection').value;
+  
+  if (savesInput > 0) {
+      saves += savesInput;
+  }
     //   const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
     //   const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
     const goalieKickInput = document.getElementById('goalieKickInput').value;
@@ -42,6 +45,9 @@ form.addEventListener('submit', (e) => {
     saveDataToLocalStorage(); // Save data to localStorage after form submission
     // Reset form fields
     form.reset();
+
+    // Set the selected value back to the <select> element
+    document.getElementById('goalieSelection').value = selectedGoalie;
 });
 
 function logEvent(eventType) {
