@@ -29,33 +29,45 @@ let seconds = parseInt(localStorage.getItem('savedSeconds')) || 0;
 let isPaused = localStorage.getItem('isClockPaused') == 'true';
 console.log('Is Clock Paused: ' + isPaused);
 
+
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const goalieSelection = document.getElementById('goalieSelection').value;
-  const savesInput = document.getElementById('savesInput').valueAsNumber;
-  
-  // Store the selected goalieSelection before resetting the form
-  const selectedGoalie = document.getElementById('goalieSelection').value;
-  
-  if (savesInput > 0) {
-      saves += savesInput;
-  }
-    //   const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
-    //   const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
-    const goalieKickInput = document.getElementById('goalieKickInput').value;
-    const qualifierInput = document.getElementById('qualifierInput').value;
-    const notesInput = document.getElementById('notesInput').value;
-    //   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-    // logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-    logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-    updateStats();
-    saveDataToLocalStorage(); // Save data to localStorage after form submission
-    // Reset form fields
-    form.reset();
+  const notesInput = document.getElementById('notesInput').value;
 
-    // Set the selected value back to the <select> element
-    document.getElementById('goalieSelection').value = selectedGoalie;
+  logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
+  updateStats();
+  saveDataToLocalStorage();
+  form.reset();
 });
+
+// form.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   const goalieSelection = document.getElementById('goalieSelection').value;
+//   const savesInput = document.getElementById('savesInput').valueAsNumber;
+  
+//   // Store the selected goalieSelection before resetting the form
+//   const selectedGoalie = document.getElementById('goalieSelection').value;
+  
+//   if (savesInput > 0) {
+//       saves += savesInput;
+//   }
+//     //   const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
+//     //   const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
+//     const goalieKickInput = document.getElementById('goalieKickInput').value;
+//     const qualifierInput = document.getElementById('qualifierInput').value;
+//     const notesInput = document.getElementById('notesInput').value;
+//     //   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+//     // logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+//     logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
+//     updateStats();
+//     saveDataToLocalStorage(); // Save data to localStorage after form submission
+//     // Reset form fields
+//     form.reset();
+
+//     // Set the selected value back to the <select> element
+//     document.getElementById('goalieSelection').value = selectedGoalie;
+// });
 
 function logEvent(eventType) {
     const notesInput = document.getElementById('notesInput').value;
