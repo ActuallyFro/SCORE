@@ -35,10 +35,16 @@ form.addEventListener('submit', (e) => {
   const goalieSelection = document.getElementById('goalieSelection').value;
   const notesInput = document.getElementById('notesInput').value;
 
+  // Store the selected goalieSelection before resetting the form
+  const selectedGoalie = document.getElementById('goalieSelection').value;
+
   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
   updateStats();
   saveDataToLocalStorage();
   form.reset();
+
+  // Set the selected value back to the <select> element
+  document.getElementById('goalieSelection').value = selectedGoalie;
 });
 
 // form.addEventListener('submit', (e) => {
@@ -70,17 +76,21 @@ form.addEventListener('submit', (e) => {
 // });
 
 function logEvent(eventType) {
-    const notesInput = document.getElementById('notesInput').value;
-    if (eventType === 'Team Scored') {
-      teamScore++;
-    } else if (eventType === 'Opponent Scored') {
-      opponentScore++;
-    }
-    logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
-    updateScores();
-    updateStats();
-    saveDataToLocalStorage(); // Save data to localStorage after each event
+  const notesInput = document.getElementById('notesInput').value;
+  if (eventType === 'Game Start') {
+    startGameClock(true);
+  } else if (eventType === 'Break Start') {
+    pauseGameClock();
+  } else if (eventType === 'Break End') {
+    resumeGameClock();
+  } else if (eventType === 'Game End') {
+    stopGameClock();
   }
+  logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
+  updateScores();
+  updateStats();
+  saveDataToLocalStorage();
+}
 
 
 // // Event listeners for buttons
