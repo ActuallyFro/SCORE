@@ -1,11 +1,11 @@
 Roster 
 |Number|Name|
-|1||
-|2||
+|1|Josh|
+|2|Ben|
 |3|Kaden|
 |4|Antenella|
 |5|Kevin|
-|6||
+|6|Max|
 |7|Madison|
 |8|Abby|
 |9|Carter|
