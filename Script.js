@@ -80,9 +80,9 @@ function logEvent(eventType) {
   if (eventType === 'Game Start') {
     startGameClock(true);
   } else if (eventType === 'Break Start') {
-    pauseGameClock();
+    stopGameClock();
   } else if (eventType === 'Break End') {
-    resumeGameClock();
+    startGameClock(false);
   } else if (eventType === 'Game End') {
     stopGameClock();
   }
@@ -156,6 +156,7 @@ function logObservation(observationType) {
     form.reset(); // Reset form fields
   }
   
+  
   // Function to determine goalieKickInput based on observation type
   function getGoalieKickInput(observationType) {
     if (observationType === 'Punt with Pass' || observationType === 'Punt with Missed') {
@@ -223,6 +224,24 @@ function updateScores() {
   teamScoreDisplay.textContent = teamScore;
   opponentScoreDisplay.textContent = opponentScore;
 }
+
+const changeClockForm = document.getElementById('changeClockForm');
+const minutesInput = document.getElementById('minutesInput');
+const secondsInput = document.getElementById('secondsInput');
+
+changeClockForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const newMinutes = parseInt(minutesInput.value) || 0;
+  const newSeconds = parseInt(secondsInput.value) || 0;
+  setGameClock(newMinutes, newSeconds);
+});
+
+function setGameClock(newMinutes, newSeconds) {
+  minutes = newMinutes;
+  seconds = newSeconds;
+  updateGameClock(true);
+}
+
 
 function exportJSON() {
   const logEntries = [];
