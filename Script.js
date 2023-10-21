@@ -45,30 +45,34 @@ form.addEventListener('submit', (e) => {
   document.getElementById('goalieSelection').value = selectedGoalie;
 });
 
+document.getElementById('teamScoreButton').addEventListener('click', () => {
+  logEvent('Team Scored');
+});
+
+document.getElementById('opponentScoreButton').addEventListener('click', () => {
+  logEvent('Opponent Scored');
+});
+
 function logEvent(eventType) {
   const notesInput = document.getElementById('notesInput').value;
   if (eventType === 'Game Start') {
     startGameClock(true);
   } else if (eventType === 'Break Start') {
-    stopGameClock();
+    pauseGameClock();
   } else if (eventType === 'Break End') {
     startGameClock(false);
   } else if (eventType === 'Game End') {
     stopGameClock();
+  } else if (eventType === 'Team Scored') {
+    teamScore++; // Increment the team score
+  } else if (eventType === 'Opponent Scored') {
+    opponentScore++; // Increment the opponent score
   }
   logEntry({ time: new Date().toLocaleTimeString(), event: eventType, notes: notesInput });
-  updateScores();
   updateStats();
   saveDataToLocalStorage();
+  updateScores(); // Add this line to update the displayed scores
 }
-
-document.getElementById('teamScoreButton').addEventListener('click', () => {
-    logEvent('Team Scored');
-});
-
-document.getElementById('opponentScoreButton').addEventListener('click', () => {
-    logEvent('Opponent Scored');
-}); 
 
 function logEntry(entryData) {
     const row = logTable.insertRow();
