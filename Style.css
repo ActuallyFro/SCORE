@@ -115,4 +115,17 @@ background-color: #f59898;
 display: inline-block;
 width: 50px;
 }
-  
+
+/* Normal zoom for PC */
+body {
+    transform: scale(1);
+    transform-origin: 0 0;
+}
+
+/* 250% zoom for mobile browsers */
+@media only screen and (max-width: 768px) {
+    body {
+        transform: scale(2.5);
+        transform-origin: 0 0;
+    }
+}
