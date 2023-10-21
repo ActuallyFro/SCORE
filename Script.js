@@ -10,8 +10,6 @@ let totalThrowsKicksMissed = parseInt(localStorage.getItem('totalThrowsKicksMiss
 let totalGoalieKicksPassed = parseInt(localStorage.getItem('totalGoalieKicksPassed')) || 0;
 let totalGoalieKicksMissed = parseInt(localStorage.getItem('totalGoalieKicksMissed')) || 0;
 
-// let goalsAgainst = parseInt(localStorage.getItem('goalsAgainst')) || 0;
-// let cleanSheets = parseInt(localStorage.getItem('cleanSheets')) || 0;
 let teamScore = parseInt(localStorage.getItem('teamScore')) || 0;
 let opponentScore = parseInt(localStorage.getItem('opponentScore')) || 0;
 let logs = [];
@@ -22,7 +20,6 @@ const statsTable = document.getElementById('stats');
 const teamScoreDisplay = document.getElementById('teamScore');
 const opponentScoreDisplay = document.getElementById('opponentScore');
 
-// JavaScript variables to manage the game clock
 let gameClockInterval;
 let minutes = parseInt(localStorage.getItem('savedMinutes')) || 0;
 let seconds = parseInt(localStorage.getItem('savedSeconds')) || 0;
@@ -35,7 +32,6 @@ form.addEventListener('submit', (e) => {
   const goalieSelection = document.getElementById('goalieSelection').value;
   const notesInput = document.getElementById('notesInput').value;
 
-  // Store the selected goalieSelection before resetting the form
   const selectedGoalie = document.getElementById('goalieSelection').value;
 
   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
@@ -43,37 +39,8 @@ form.addEventListener('submit', (e) => {
   saveDataToLocalStorage();
   form.reset();
 
-  // Set the selected value back to the <select> element
   document.getElementById('goalieSelection').value = selectedGoalie;
 });
-
-// form.addEventListener('submit', (e) => {
-//   e.preventDefault();
-//   const goalieSelection = document.getElementById('goalieSelection').value;
-//   const savesInput = document.getElementById('savesInput').valueAsNumber;
-  
-//   // Store the selected goalieSelection before resetting the form
-//   const selectedGoalie = document.getElementById('goalieSelection').value;
-  
-//   if (savesInput > 0) {
-//       saves += savesInput;
-//   }
-//     //   const goalsAgainstInput = document.getElementById('goalsAgainstInput').valueAsNumber;
-//     //   const cleanSheetsInput = document.getElementById('cleanSheetsInput').valueAsNumber;
-//     const goalieKickInput = document.getElementById('goalieKickInput').value;
-//     const qualifierInput = document.getElementById('qualifierInput').value;
-//     const notesInput = document.getElementById('notesInput').value;
-//     //   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, cleanSheets: cleanSheetsInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-//     // logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalsAgainst: goalsAgainstInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-//     logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, saves: savesInput, goalieKick: goalieKickInput, qualifier: qualifierInput, notes: notesInput });
-//     updateStats();
-//     saveDataToLocalStorage(); // Save data to localStorage after form submission
-//     // Reset form fields
-//     form.reset();
-
-//     // Set the selected value back to the <select> element
-//     document.getElementById('goalieSelection').value = selectedGoalie;
-// });
 
 function logEvent(eventType) {
   const notesInput = document.getElementById('notesInput').value;
@@ -92,13 +59,6 @@ function logEvent(eventType) {
   saveDataToLocalStorage();
 }
 
-
-// // Event listeners for buttons
-// document.getElementById('gameTimerStart').addEventListener('click', () => {
-//     startGameClock();
-// });
-
-// Event listeners for buttons
 document.getElementById('teamScoreButton').addEventListener('click', () => {
     logEvent('Team Scored');
 });
@@ -107,7 +67,6 @@ document.getElementById('opponentScoreButton').addEventListener('click', () => {
     logEvent('Opponent Scored');
 }); 
 
-// Function to log an entry and save it to logs array
 function logEntry(entryData) {
     const row = logTable.insertRow();
     const timeCell = row.insertCell(0);
@@ -229,18 +188,32 @@ const changeClockForm = document.getElementById('changeClockForm');
 const minutesInput = document.getElementById('minutesInput');
 const secondsInput = document.getElementById('secondsInput');
 
+// Remove the previous event listener for this form
+// changeClockForm.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   const newMinutes = parseInt(minutesInput.value);
+//   const newSeconds = parseInt(secondsInput.value);
+//   setGameClock(newMinutes, newSeconds);
+// });
+
+// Add a new event listener to handle the form submission
 changeClockForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  const newMinutes = parseInt(minutesInput.value) || 0;
-  const newSeconds = parseInt(secondsInput.value) || 0;
+  const newMinutes = parseInt(minutesInput.value) || 0; // Ensure it's a valid number or default to 0
+  const newSeconds = parseInt(secondsInput.value) || 0; // Ensure it's a valid number or default to 0
   setGameClock(newMinutes, newSeconds);
 });
 
+// ...
 function setGameClock(newMinutes, newSeconds) {
   minutes = newMinutes;
   seconds = newSeconds;
   updateGameClock(true);
+  
+  document.getElementById('minutes').textContent = newMinutes.toString().padStart(2, '0');
+  document.getElementById('seconds').textContent = newSeconds.toString().padStart(2, '0');
 }
+
 
 
 function exportJSON() {
@@ -299,8 +272,6 @@ function clearLog() {
   seconds = 0;
   updateGameClock();
 
-  //   goalsAgainst = 0;
-  //   cleanSheets = 0;
   teamScore = 0;
   opponentScore = 0;
   updateStats();
@@ -323,64 +294,51 @@ function clearLog() {
   localStorage.removeItem('isClockPaused');
   isPaused = true;
 
-  // Reset the <select> element to the default option
   document.getElementById('goalieSelection').value = "Goalie1";
 }
 
 
-// Function to start the game clock
 function startGameClock(isStartOrRestart) {
-  //console.log('Current startGameClock Var: ' + isStartOrRestart);
-
   if (!gameClockInterval) {
     gameClockInterval = setInterval(updateGameClock, 1000);
-    //TODO -- decide if needed:
-    // document.getElementById('gameTimerStart').disabled = true; // Disable the "Game Start" button
-    // document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
     updateGameClock();
-    // logEvent('Game Start'); // Call logEvent with 'Game Start' here
   }
   if (isStartOrRestart){
     updateGameClock(isStartOrRestart);
   }
 }
 
-// Function to update the game clock
 function updateGameClock(isStartOrRestart) {
-    // console.log('Current updateGameClock Var: ' + isStartOrRestart);
-    if (isStartOrRestart){
-        console.log('RESETTING Game Clock!');
+  if (isStartOrRestart) {
+      console.log('RESETTING Game Clock!');
+      isPaused = false;
+      if (minutes === 0 && seconds === 0) {
+          seconds = 1;
+      }
+  }
 
-        seconds = 0;
-        minutes = 0;
-        isPaused = false;
-    }
+  if (!isPaused) {
+      seconds++;
+      if (seconds >= 60) {
+          seconds = 0;
+          minutes++;
+      }
+  }
 
-    if (!isPaused) {
-        seconds++;
-        if (seconds === 60) {
-            seconds = 0;
-            minutes++;
-        }
-    }
-    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    saveDataToLocalStorageTime();
+  document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+  document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+  saveDataToLocalStorageTime();
 }
+
+
 
 function pauseGameClock() {
     isPaused = true;
-    //   document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
-    //   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
-    // saveDataToLocalStorageTime();
 }
 
 function resumeGameClock() {
     isPaused = false;
     updateGameClock();
-    //   document.getElementById('gameTimerBreakStart').disabled = true; // Disable the "Break Start" button
-    //   document.getElementById('gameTimerBreakStop').disabled = false; // Enable the "Break End" button
-    // saveDataToLocalStorageTime();
 }
 
 function stopGameClock() {
@@ -388,9 +346,6 @@ function stopGameClock() {
   gameClockInterval = null;
   isPaused = true;
   saveDataToLocalStorageTime();
-//   document.getElementById('gameTimerStart').disabled = false; // Enable the "Game Start" button
-//   document.getElementById('gameTimerBreakStart').disabled = false; // Enable the "Break Start" button
-//   document.getElementById('gameTimerBreakStop').disabled = true; // Disable the "Break End" button
 }
 
 
@@ -403,8 +358,6 @@ function saveDataToLocalStorageTime(){
 function saveDataToLocalStorage() {
     console.log('Saving data to localStorage...');
     localStorage.setItem('saves', saves.toString());
-    //   localStorage.setItem('goalsAgainst', goalsAgainst.toString());
-    //   localStorage.setItem('cleanSheets', cleanSheets.toString());
     localStorage.setItem('teamScore', teamScore.toString());
     localStorage.setItem('opponentScore', opponentScore.toString());
     localStorage.setItem('logs', JSON.stringify(logs));
