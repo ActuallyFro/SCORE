@@ -10,6 +10,8 @@ let totalThrowsKicksMissed = parseInt(localStorage.getItem('totalThrowsKicksMiss
 let totalGoalieKicksPassed = parseInt(localStorage.getItem('totalGoalieKicksPassed')) || 0;
 let totalGoalieKicksMissed = parseInt(localStorage.getItem('totalGoalieKicksMissed')) || 0;
 
+let selectedGoalie = document.getElementById('goalieSelection').value;
+
 let teamScore = parseInt(localStorage.getItem('teamScore')) || 0;
 let opponentScore = parseInt(localStorage.getItem('opponentScore')) || 0;
 let logs = [];
@@ -33,6 +35,7 @@ form.addEventListener('submit', (e) => {
   const notesInput = document.getElementById('notesInput').value;
 
   const selectedGoalie = document.getElementById('goalieSelection').value;
+  
 
   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
   updateStats();
@@ -91,30 +94,32 @@ function logEntry(entryData) {
 
 // Event listeners for observation buttons
 function logObservation(observationType) {
-    const goalieSelection = document.getElementById('goalieSelection').value;
-    const savesInput = observationType === 'Goalie Save' ? 1 : 0; // Set savesInput based on the observation type
-    const goalieKickInput = getGoalieKickInput(observationType); // Set goalieKickInput based on the observation type
-    const qualifierInput = getQualifierInput(observationType); // Set qualifierInput based on the observation type
-    const notesInput = document.getElementById('notesInput').value;
+  const goalieSelection = document.getElementById('goalieSelection').value; // Get the selected goalie
+  const savesInput = observationType === 'Goalie Save' ? 1 : 0;
+  const goalieKickInput = getGoalieKickInput(observationType);
+  const qualifierInput = getQualifierInput(observationType);
+  const notesInput = document.getElementById('notesInput').value;
 
-    if (savesInput > 0) {
+  if (savesInput > 0) {
       saves += savesInput;
-    }
-  
-    logEntry({
+  }
+
+  logEntry({
       time: new Date().toLocaleTimeString(),
-      goalie: goalieSelection,
+      goalie: goalieSelection, // Log the selected goalie
       saves: savesInput,
       goalieKick: goalieKickInput,
       qualifier: qualifierInput,
       notes: notesInput,
-    });
-  
-    updateStats();
-    saveDataToLocalStorage(); // Save data to localStorage after form submission
-    form.reset(); // Reset form fields
-  }
-  
+  });
+
+  updateStats();
+  saveDataToLocalStorage();
+  form.reset();
+
+  // Set the drop-down value back to the selected goalie
+  document.getElementById('goalieSelection').value = goalieSelection;
+} 
   
   // Function to determine goalieKickInput based on observation type
   function getGoalieKickInput(observationType) {
