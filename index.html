@@ -48,7 +48,8 @@
       </select>
 
       <input type="text" id="notesInput" placeholder="Notes">
-      <button type="submit" class="blue-button">Log Entry</button>
+      <button type="submit" onclick="logEvent('observation-note-only');" class="blue-button">Note</button>
+      <button type="submit" onclick="logEvent('observation-goalie-log');" class="blue-button goalie-save-button">Log Entry</button>
     </form>
   </div>
   
@@ -139,7 +140,6 @@
     <table id="log">
       <tr>
         <th>Time</th>
-        <th>Event</th>
         <th>Goalie</th>
         <th>Saves</th>
         <th>Goalie Kick</th>

@@ -29,21 +29,21 @@ let isPaused = localStorage.getItem('isClockPaused') == 'true';
 console.log('Is Clock Paused: ' + isPaused);
 
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const goalieSelection = document.getElementById('goalieSelection').value;
-  const notesInput = document.getElementById('notesInput').value;
+// form.addEventListener('submit', (e) => {
+//   e.preventDefault();
+//   const goalieSelection = document.getElementById('goalieSelection').value;
+//   const notesInput = document.getElementById('notesInput').value;
 
-  const selectedGoalie = document.getElementById('goalieSelection').value;
+//   const selectedGoalie = document.getElementById('goalieSelection').value;
   
 
-  logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
-  updateStats();
-  saveDataToLocalStorage();
-  form.reset();
+//   logEntry({ time: new Date().toLocaleTimeString(), goalie: goalieSelection, notes: notesInput });
+//   updateStats();
+//   saveDataToLocalStorage();
+//   form.reset();
 
-  document.getElementById('goalieSelection').value = selectedGoalie;
-});
+//   document.getElementById('goalieSelection').value = selectedGoalie;
+// });
 
 document.getElementById('teamScoreButton').addEventListener('click', () => {
   logEvent('Team Scored');
@@ -55,6 +55,7 @@ document.getElementById('opponentScoreButton').addEventListener('click', () => {
 
 function logEvent(eventType) {
   const notesInput = document.getElementById('notesInput').value;
+
   if (eventType === 'Game Start') {
     startGameClock(true);
   } else if (eventType === 'Break Start') {
@@ -77,15 +78,15 @@ function logEvent(eventType) {
 function logEntry(entryData) {
     const row = logTable.insertRow();
     const timeCell = row.insertCell(0);
-    const eventCell = row.insertCell(1);
-    const goalieCell = row.insertCell(2);
-    const savesCell = row.insertCell(3);
-    const goalieKickCell = row.insertCell(4);
-    const qualifierCell = row.insertCell(5);
-    const notesCell = row.insertCell(6);
+    // const eventCell = row.insertCell(1);
+    const goalieCell = row.insertCell(1);
+    const savesCell = row.insertCell(2);
+    const goalieKickCell = row.insertCell(3);
+    const qualifierCell = row.insertCell(4);
+    const notesCell = row.insertCell(5);
 
     timeCell.textContent = entryData.time;
-    eventCell.textContent = entryData.event || '';
+    //eventCell.textContent = entryData.event || '';
     goalieCell.textContent = entryData.goalie || '';
     savesCell.textContent = entryData.saves || ''; // Display blank for NaN
     goalieKickCell.textContent = entryData.goalieKick || '';
@@ -144,6 +145,54 @@ function logObservation(observationType) {
     }
     return ''; // Default value
   }  
+
+// Function to handle both logging actions
+function logEvent(eventType) {
+  const notesInput = document.getElementById('notesInput').value.trim();
+  const goalie = document.getElementById('goalieSelection').value;
+  const currentTime = formatCurrentTime();
+  
+  const eventDetails = {
+    time: currentTime,
+    // event: eventType,
+    goalie: goalie,
+    notes: notesInput
+  };
+  
+  // Update scores based on the event type
+  if (eventType === 'Team Scored') {
+    teamScore++;
+  } else if (eventType === 'Opponent Scored') {
+    opponentScore++;
+  }
+
+  // Log the event in the table
+  logEntry(eventDetails);
+  updateScores(); // Update the displayed scores
+  updateStats();
+  saveDataToLocalStorage();
+}
+
+function logEntry(entryData) {
+  const row = logTable.insertRow(-1);
+  const cellKeys = ['time', 'event', 'goalie', 'saves', 'goalieKick', 'qualifier', 'notes'];
+
+  cellKeys.forEach(key => {
+    const cell = row.insertCell();
+    cell.textContent = entryData[key] || ''; // Use empty string if data is undefined
+  });
+
+  logs.push(entryData); // Add the entry to the logs array
+}
+
+// Helper function to format current time
+function formatCurrentTime() {
+  const currentTime = new Date();
+  return currentTime.getHours().toString().padStart(2, '0') + ':' +
+         currentTime.getMinutes().toString().padStart(2, '0') + ':' +
+         currentTime.getSeconds().toString().padStart(2, '0');
+}
+
 
 function updateStats() {
   statsTable.innerHTML = `
@@ -233,7 +282,7 @@ function exportJSON() {
       const cells = row.querySelectorAll('td');
       const entry = {
         time: cells[0].textContent,
-        event: cells[1].textContent,
+        //event: cells[1].textContent,
         goalie: cells[2].textContent,
         saves: cells[3].textContent ? parseInt(cells[3].textContent) : '', // Display blank for NaN
         // goalsAgainst: cells[4].textContent ? parseInt(cells[4].textContent) : '', // Display blank for NaN
@@ -377,7 +426,7 @@ function clearLogTable() {
     logTable.innerHTML = `
     <tr>
     <th>Time</th>
-    <th>Event</th>
+    // <th>Event</th>
     <th>Goalie</th>
     <th>Saves</th>
     <!-- <th>Goals Against</th> -->
